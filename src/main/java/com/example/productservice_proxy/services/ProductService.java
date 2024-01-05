@@ -7,7 +7,6 @@ public class ProductService implements iProductService {
     public String getAllProducts() {
         return null;
     }
-
     @Override
     public String getSingleProduct(Long productId) {
         return null;
