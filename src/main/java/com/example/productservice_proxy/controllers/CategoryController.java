@@ -18,4 +18,13 @@ public class CategoryController {
     public String addNewCategory(@RequestBody CategoryDto categorydto) {
         return "Adding new Category: " + categorydto;
     }
+
+    @PutMapping("/{id}")
+    public String updateCategory(@PathVariable("id") Long categoryId) {
+        return "Updating category: " + categoryId;
+    }
+    @DeleteMapping("/{id}")
+    public String deleteCategory(@PathVariable("id") Long categoryId) {
+        return "Deleting category: " + categoryId;
+    }
 }
