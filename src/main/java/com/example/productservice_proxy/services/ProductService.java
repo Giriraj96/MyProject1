@@ -5,7 +5,13 @@ import com.example.productservice_proxy.models.Categories;
 import com.example.productservice_proxy.models.Product;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class ProductService implements IProductService {
     private RestTemplateBuilder restTemplateBuilder;
@@ -13,11 +19,19 @@ public class ProductService implements IProductService {
         this.restTemplateBuilder = restTemplateBuilder;
     }
     @Override
-    public String getAllProducts() {
-        return null;
+    public List<Product> getAllProducts() {
+        RestTemplate restTemplate = restTemplateBuilder.build();
+        ProductDto[] productDtos = restTemplate.getForEntity("https://fakestoreapi.com/products",ProductDto[].class).getBody();
+        List<Product> products = new ArrayList<>();
+        for(ProductDto productDto : productDtos){
+            Product product = getProduct(productDto);
+            products.add(product);
+        }
+        return products;
     }
     @Override
     public Product getSingleProduct(Long productId) {
+
         RestTemplate restTemplate = restTemplateBuilder.build();
         ProductDto productDto = restTemplate.getForEntity("https://fakestoreapi.com/products/{id}",ProductDto.class,productId).getBody();
         Product product = getProduct(productDto);
@@ -26,8 +40,11 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public String addNewProduct(ProductDto productDto) {
-        return null;
+    public Product addNewProduct(ProductDto productDto) {
+        RestTemplate restTemplate = restTemplateBuilder.build();
+        restTemplate.postForEntity("https://fakestoreapi.com/products",productDto,ProductDto.class).getBody();
+        Product product = getProduct(productDto);
+        return product;
     }
     @Override
     public String updateProduct(Long productId) {
